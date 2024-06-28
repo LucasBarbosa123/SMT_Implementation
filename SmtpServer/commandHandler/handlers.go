@@ -2,6 +2,7 @@ package commandHandler
 
 import (
 	"smtpserver/stateManager"
+	"strconv"
 	"strings"
 )
 
@@ -22,4 +23,18 @@ func HandleHELO(stateManager *stateManager.StateManager, message string) string 
 
 	stateManager.NextState()
 	return "250 Hello\r\n"
+}
+
+func HandleEHLO(stateManager *stateManager.StateManager, message string, maxMsgSize int) string {
+	response := HandleHELO(stateManager, message)
+
+	resCode := strings.Fields(response)[0]
+
+	if resCode != "250" {
+		return response
+	}
+
+	response += "250-SIZE " + strconv.Itoa(maxMsgSize) + "\r\n"
+
+	return response
 }

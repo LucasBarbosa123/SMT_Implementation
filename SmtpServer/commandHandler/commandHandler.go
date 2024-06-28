@@ -7,6 +7,9 @@ import (
 	"strings"
 )
 
+// tem q ser usado quando recebermos o comando DATA para ver se excede este tamanho
+const maxMsgSize = 36700160 // 35 MB
+
 func HandleCommand(stateManager *stateManager.StateManager, message string) string {
 	response := ""
 	message = strings.TrimSpace(message)
@@ -22,6 +25,8 @@ func HandleCommand(stateManager *stateManager.StateManager, message string) stri
 	switch msg {
 	case "HELO":
 		response = HandleHELO(stateManager, message)
+	case "EHLO":
+		response = HandleEHLO(stateManager, message, maxMsgSize)
 	default:
 		response = "500 Syntax error, command unrecognized\r\n"
 	}
