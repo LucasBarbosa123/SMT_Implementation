@@ -18,11 +18,12 @@ func HandleHELO(stateManager *stateManager.StateManager, message string) string 
 		//goes after the domain that needs to be the first thing after the " "
 		stateManager.Domain = msgParts[1]
 	} else {
-		stateManager.Domain = ""
+		// stateManager.Domain = ""
+		return "500 Syntax error, missing an argument\r\n"
 	}
 
 	stateManager.NextState()
-	return "250 Hello\r\n"
+	return "250 Hello.Fodase is my domain name\r\n"
 }
 
 func HandleEHLO(stateManager *stateManager.StateManager, message string, maxMsgSize int) string {
@@ -34,7 +35,7 @@ func HandleEHLO(stateManager *stateManager.StateManager, message string, maxMsgS
 		return response
 	}
 
-	response += "250-SIZE " + strconv.Itoa(maxMsgSize) + "\r\n"
+	response += "250 SIZE " + strconv.Itoa(maxMsgSize) + "\r\n"
 
 	return response
 }
