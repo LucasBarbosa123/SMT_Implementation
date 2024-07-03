@@ -3,7 +3,6 @@ package commandHandler
 import (
 	"fmt"
 	"smtpserver/stateManager"
-	"smtpserver/utils"
 	"strings"
 )
 
@@ -18,7 +17,7 @@ func HandleCommand(stateManager *stateManager.StateManager, message string) stri
 	msgParts := strings.Fields(message)
 	msg := msgParts[0]
 
-	if utils.ContainsString(stateManager.CurrentState.PossibleCommands, message) {
+	if !stateManager.IsPossibleCommand(msg) {
 		return "500 Syntax error, command unrecognized or unvalid\r\n"
 	}
 
@@ -27,6 +26,8 @@ func HandleCommand(stateManager *stateManager.StateManager, message string) stri
 		response = HandleHELO(stateManager, message)
 	case "EHLO":
 		response = HandleEHLO(stateManager, message, maxMsgSize)
+	case "MAIL":
+		response = HandleMAILFROM(stateManager, message, maxMsgSize)
 	default:
 		response = "500 Syntax error, command unrecognized\r\n"
 	}
