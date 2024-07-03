@@ -17,7 +17,6 @@ func HandleHELO(stateManager *stateManager.StateManager, message string) string 
 		//goes after the domain that needs to be the first thing after the " "
 		stateManager.Domain = msgParts[1]
 	} else {
-		// stateManager.Domain = ""
 		return "500 Syntax error, missing an argument\r\n"
 	}
 
@@ -42,9 +41,38 @@ func HandleEHLO(stateManager *stateManager.StateManager, message string, maxMsgS
 
 func HandleMAILFROM(stateManager *stateManager.StateManager, message string, maxMsgSize int) string {
 	msgParts := strings.Fields(message)
-	if msgParts[1] != "FROM" {
+	if len(msgParts) == 1 || msgParts[1] != "FROM" {
 		return "500 Syntax error, command unrecognized or unvalid\r\n"
 	}
 
+	if len(msgParts) == 2 {
+		return "500 Syntax error, missing an argument\r\n"
+	}
+
+	if len(msgParts) > 3 {
+		return "500 Syntax error, to much arguments\r\n"
+	}
+
+	stateManager.AddFrom(msgParts[2])
+	stateManager.NextState(msgParts[0])
+	return "250 Ok"
+}
+
+func HandleRCPTTO(stateManager *stateManager.StateManager, message string, maxMsgSize int) string {
+	msgParts := strings.Fields(message)
+	if len(msgParts) == 1 || msgParts[1] != "TO" {
+		return "500 Syntax error, command unrecognized or unvalid\r\n"
+	}
+
+	if len(msgParts) == 2 {
+		return "500 Syntax error, missing an argument\r\n"
+	}
+
+	if len(msgParts) > 3 {
+		return "500 Syntax error, to much arguments\r\n"
+	}
+
+	stateManager.AddTO(msgParts[2])
+	stateManager.NextState(msgParts[0])
 	return "250 Ok"
 }

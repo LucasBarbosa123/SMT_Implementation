@@ -39,11 +39,17 @@ func InitStatesAndCommands() ([]State, []Command) {
 		Name: "MAIL",
 	})
 
+	// command 3
+	existingCommands = append(existingCommands, Command{
+		Name: "RCPT",
+	})
+
 	//state 1
 	existingStates = append(existingStates, State{
 		Name: "Comunication Started",
 		PossibleCommands: []*Command{
 			&existingCommands[2],
+			&existingCommands[3],
 		},
 	})
 
@@ -51,7 +57,10 @@ func InitStatesAndCommands() ([]State, []Command) {
 	existingCommands[0].NextState = &existingStates[1]
 	existingCommands[1].NextState = &existingStates[1]
 
-	//just for the sake of having continuation the last one will poit to the first until we implement quit command
-	existingCommands[2].NextState = &existingStates[0]
+	//dar update nos commands 2 e 3
+	//eles tb apontam para o state 1 pq tu podes adicionar varios to e froms
+	existingCommands[2].NextState = &existingStates[1]
+	existingCommands[3].NextState = &existingStates[1]
+
 	return existingStates, existingCommands
 }

@@ -28,6 +28,8 @@ func HandleCommand(stateManager *stateManager.StateManager, message string) stri
 		response = HandleEHLO(stateManager, message, maxMsgSize)
 	case "MAIL":
 		response = HandleMAILFROM(stateManager, message, maxMsgSize)
+	case "RCPT":
+		response = HandleRCPTTO(stateManager, message, maxMsgSize)
 	default:
 		response = "500 Syntax error, command unrecognized\r\n"
 	}
